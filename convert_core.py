@@ -1,6 +1,7 @@
 import io
 import os
 import requests
+import pygame
 
 from google.cloud import texttospeech
 from google.cloud import speech
@@ -13,6 +14,7 @@ class GoogleConvert:
         self.language_code = "ko-KR"
         self.encode_type = "utf-8"
         self.wav_path = "output.wav"
+        self.mp3_path = "output.mp3"
 
         self.gpt_server_ip = ""
         self.gpt_server_port = ":8080"
@@ -64,7 +66,14 @@ class GoogleConvert:
             audio_config = audio_config
         )
 
-        with open(self.wav_path, "wb") as f:
+        with open(self.mp3_path, "wb") as f:
             f.write(response.audio_content)
         
-        os.system('aplay '+self.wav_path)
+        try:
+            pygame.mixer.init()
+            pygame.mixer.music.load(self.mp3_path)
+            pygame.mixer.music.set_volume(0.8)
+            pygame.mixer.music.play()
+            
+            while pygame.mixer.music.get_busy(): continue
+        except pygame.error as e: print(str(e))
