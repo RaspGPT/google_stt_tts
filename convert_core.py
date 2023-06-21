@@ -2,23 +2,26 @@ import io
 import os
 import requests
 import pygame
+import json
 
 from google.cloud import texttospeech
 from google.cloud import speech
+
+with open("./config.json", 'r') as f: conf = json.load(f)
 
 class GoogleConvert:
     def __init__(self):
         self._set_credential()
         self.stt_client = speech.SpeechClient()
         self.tts_client = texttospeech.TextToSpeechClient()
-        self.language_code = "ko-KR"
-        self.encode_type = "utf-8"
-        self.wav_path = "output.wav"
-        self.mp3_path = "output.mp3"
+        self.language_code = conf.LANGUAGE_CODE
+        self.encode_type = conf.ENCODE_TYPE
+        self.wav_path = conf.WAV_PATH
+        self.mp3_path = conf.MP3_PATH
 
-        self.gpt_server_ip = ""
-        self.gpt_server_port = ":8080"
-        self.gpt_q_api = "/gpt"
+        self.gpt_server_ip = conf.SERVER_IP
+        self.gpt_server_port = ":"+conf.SERVER_PORT
+        self.gpt_q_api = conf.GPT_API
 
     def _set_credential(self):
         credential_path = ""
@@ -31,9 +34,9 @@ class GoogleConvert:
         
         config = speech.RecognitionConfig(
             encoding = speech.RecognitionConfig.AudioEncoding.LINEAR16,
-            sample_rate_hertz = 16000,
+            sample_rate_hertz = conf.SAMPLE_RATE_HERTZ,
             language_code = self.language_code,
-            audio_channel_count = 1
+            audio_channel_count = conf.AUDIO_CHANNEL_COUNT
         )
 
         response = self.stt_client.recognize(config=config, audio=audio)
@@ -72,7 +75,7 @@ class GoogleConvert:
         try:
             pygame.mixer.init()
             pygame.mixer.music.load(self.mp3_path)
-            pygame.mixer.music.set_volume(0.8)
+            pygame.mixer.music.set_volume(conf.VOLUME)
             pygame.mixer.music.play()
             
             while pygame.mixer.music.get_busy(): continue

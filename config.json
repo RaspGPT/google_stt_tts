@@ -1,0 +1,14 @@
+{
+    "LANGUAGE_CODE": "ko-KR",
+    "ENCODE_TYPE": "utf-8",
+    "WAV_PATH": "output.wav",
+    "MP3_PATH": "output.mp3",
+    "SERVER_IP": "",
+    "SERVER_PORT": "8080",
+    "GPT_API": "/gpt",
+
+    "SAMPLE_RATE_HERTZ": 16000,
+    "AUDIO_CHANNEL_COUNT": 1,
+
+    "VOLUME": 0.8
+}
